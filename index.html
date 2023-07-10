@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Todo App</title>
+</head>
+<script>
+
+  function deleteDone(){
+    console.log("Done Delete");
+  }
+   function deleteTodo(data){
+      console.log(data);
+      fetch("http://localhost:4000/todos/" + data,{
+        method:"DELETE",
+        headers:{
+           "content-type":"application/json"
+        }
+    }).then(deleteDone);
+   }
+   function parsedRes1(data){
+    var parentElement = document.getElementById("mainArea");
+    for(var i = 0; i<data.length; i++){
+        var childElement = document.createElement("div");
+
+        var grandChild1 = document.createElement("span");
+        grandChild1.innerHTML = data[i].title;
+
+        var grandChild2 = document.createElement("span");
+        grandChild2.innerHTML = data[i].description;
+
+        var grandChild3 = document.createElement("button");
+        grandChild3.innerHTML = "Delete";
+        grandChild3.setAttribute("onClick", "deleteTodo(" + data[i].id + ")");
+
+        childElement.appendChild(grandChild1);
+        childElement.appendChild(grandChild2);
+        childElement.appendChild(grandChild3);
+
+        parentElement.appendChild(childElement);
+    }
+         }
+    function callback2(res){
+      res.json().then(parsedRes1);
+    }
+
+  function func2(){
+    fetch("http://localhost:4000/todos",{
+        method:"GET",
+    }).then(callback2)
+
+
+  }
+  func2();
+  function func(){
+    var title = document.getElementById("title1").value;
+    var description = document.getElementById("desc").value;
+     console.log(title);
+    function parsedRes(data){
+         console.log(data);
+         var parentElement = document.getElementById("mainArea");
+        var childElement = document.createElement("div");
+
+        var grandChild1 = document.createElement("span");
+        grandChild1.innerHTML = data.title;
+
+        var grandChild2 = document.createElement("span");
+        grandChild2.innerHTML = data.description;
+
+        var grandChild3 = document.createElement("button");
+        grandChild3.innerHTML = "Button";
+
+
+        childElement.appendChild(grandChild1);
+        childElement.appendChild(grandChild2);
+        childElement.appendChild(grandChild3);
+
+        parentElement.appendChild(childElement);
+    }
+    function callback(res){
+      res.json().then(parsedRes);
+    }
+    fetch("http://localhost:4000/todos",{
+        method:"POST",
+        body: JSON.stringify({
+          title:title,
+          description:description
+        }),
+        headers:{
+           "content-type":"application/json"
+        }
+    }).then(callback)
+  }
+</script>
+<body>
+            To do  title
+    <input type = "text" id="title1">  </input>
+       <br>   <br>
+        Description of todos 
+   <input type = "text" id="desc"> </input>
+        <br>  <br>
+  <button onclick="func()"> Send </button>
+  <div id = "mainArea">
+    
+  </div>
+</body>
+</html>
